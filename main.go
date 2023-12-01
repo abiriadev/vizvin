@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/abiriadev/iris"
+	"github.com/mazznoer/colorgrad"
 )
 
 func genplot(r bufio.Reader) [256][256]int {
@@ -32,12 +35,31 @@ func genplot(r bufio.Reader) [256][256]int {
 	return plot
 }
 
-func printPlot(plot [256][256]int) {
+func plotMax(plot *[256][256]int) int {
+	mx := 0
+
 	for i := 0; i < 256; i++ {
 		for j := 0; j < 256; j++ {
-			fmt.Printf("%d ", plot[i][j])
+			if plot[i][j] > mx {
+				mx = plot[i][j]
+			}
 		}
-		fmt.Printf("\n")
+	}
+
+	return mx
+}
+
+func printPlot(plot [256][256]int) {
+	mx := plotMax(&plot)
+	g := colorgrad.Turbo()
+
+	for i := 0; i < 256; i++ {
+		for j := 0; j < 256; j++ {
+			v := plot[i][j]
+			c := g.At(float64(v) / float64(mx))
+			fmt.Printf("%s  ", iris.ColorBg(c))
+		}
+		fmt.Printf("%s\n", iris.Reset)
 	}
 }
 
