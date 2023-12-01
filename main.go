@@ -35,11 +35,11 @@ func genplot(r bufio.Reader) [256][256]int {
 	return plot
 }
 
-func plotMax(plot *[256][256]int) int {
+func plotMax(plot [][]int, n int) int {
 	mx := 0
 
-	for i := 0; i < 256; i++ {
-		for j := 0; j < 256; j++ {
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
 			if plot[i][j] > mx {
 				mx = plot[i][j]
 			}
@@ -49,12 +49,12 @@ func plotMax(plot *[256][256]int) int {
 	return mx
 }
 
-func printPlot(plot [256][256]int) {
-	mx := plotMax(&plot)
+func printPlot(plot [][]int, n int) {
+	mx := plotMax(plot, n)
 	g := colorgrad.Turbo()
 
-	for i := 0; i < 256; i++ {
-		for j := 0; j < 256; j++ {
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
 			v := plot[i][j]
 			c := g.At(float64(v) / float64(mx))
 			fmt.Printf("%s  ", iris.ColorBg(c))
@@ -81,10 +81,20 @@ func openFile() bufio.Reader {
 	return *bufio.NewReader(f)
 }
 
+func arr2slice[T any](arr [256][256]T) [][]T {
+	res := make([][]T, 256*256)
+
+	for i := 0; i < 256; i++ {
+		res[i] = arr[i][:]
+	}
+
+	return res
+}
+
 func main() {
 	bin := openFile()
 
 	p := genplot(bin)
 
-	printPlot(p)
+	printPlot(arr2slice(p), 256)
 }
