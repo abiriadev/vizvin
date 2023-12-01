@@ -24,12 +24,21 @@ func genplot(r bufio.Reader) [256][256]int {
 			break
 		}
 
-		fmt.Printf("%02x, %02x\n", last, curr)
+		plot[last][curr]++
 
 		last = curr
 	}
 
 	return plot
+}
+
+func printPlot(plot [256][256]int) {
+	for i := 0; i < 256; i++ {
+		for j := 0; j < 256; j++ {
+			fmt.Printf("%d ", plot[i][j])
+		}
+		fmt.Printf("\n")
+	}
 }
 
 func openFile() bufio.Reader {
@@ -53,5 +62,7 @@ func openFile() bufio.Reader {
 func main() {
 	bin := openFile()
 
-	_ = genplot(bin)
+	p := genplot(bin)
+
+	printPlot(p)
 }
