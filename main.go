@@ -68,14 +68,13 @@ func resizePlot(src [][]int, srcSize int, destSize int) [][]int {
 	return dest
 }
 
-func printPlot(plot [][]int, n int) {
-	mx := plotMax(plot, n)
+func printPlot(plot [][]int, n int, scaleFunc Colorscale) {
 	g := colorgrad.Turbo()
 
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
 			v := plot[i][j]
-			c := g.At(float64(v) / float64(mx))
+			c := g.At(scaleFunc.Scale(v))
 			fmt.Printf("%s  ", iris.ColorBg(c))
 		}
 		fmt.Printf("%s\n", iris.Reset)
@@ -119,5 +118,5 @@ func main() {
 
 	dest := resizePlot(arr2slice(p), 256, destSize)
 
-	printPlot(dest, destSize)
+	printPlot(dest, destSize, NewDistinctScale(dest, destSize))
 }
