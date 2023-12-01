@@ -49,6 +49,23 @@ func plotMax(plot [][]int, n int) int {
 	return mx
 }
 
+func resizePlot(src [][]int, srcSize int, destSize int) [][]int {
+	dest := make([][]int, destSize)
+
+	for i := range dest {
+		dest[i] = make([]int, destSize)
+	}
+
+	for i := 0; i < destSize; i++ {
+		for j := 0; j < destSize; j++ {
+			a := src[i][j]
+			dest[i][j] = a
+		}
+	}
+
+	return dest
+}
+
 func printPlot(plot [][]int, n int) {
 	mx := plotMax(plot, n)
 	g := colorgrad.Turbo()
@@ -82,9 +99,9 @@ func openFile() bufio.Reader {
 }
 
 func arr2slice[T any](arr [256][256]T) [][]T {
-	res := make([][]T, 256*256)
+	res := make([][]T, 256)
 
-	for i := 0; i < 256; i++ {
+	for i := range res {
 		res[i] = arr[i][:]
 	}
 
@@ -96,5 +113,9 @@ func main() {
 
 	p := genplot(bin)
 
-	printPlot(arr2slice(p), 256)
+	destSize := 32
+
+	dest := resizePlot(arr2slice(p), 256, destSize)
+
+	printPlot(dest, destSize)
 }
