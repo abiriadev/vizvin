@@ -56,9 +56,11 @@ func resizePlot(src [][]int, srcSize int, destSize int) [][]int {
 		dest[i] = make([]int, destSize)
 	}
 
+	rat := srcSize / destSize
+
 	for i := 0; i < destSize; i++ {
 		for j := 0; j < destSize; j++ {
-			a := src[i][j]
+			a := src[i*rat][j*rat]
 			dest[i][j] = a
 		}
 	}
@@ -113,7 +115,7 @@ func main() {
 
 	p := genplot(bin)
 
-	destSize := 32
+	destSize := 50
 
 	dest := resizePlot(arr2slice(p), 256, destSize)
 
